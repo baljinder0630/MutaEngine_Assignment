@@ -1,6 +1,8 @@
 import User from "../models/user.js"
 import bcrypt from "bcrypt"
 import sendEmail from "../services/sendEmail.js"
+import cryptoRandomString from 'crypto-random-string'
+
 const signUp = async (req, res) => {
     const { email, password, firstName, lastName } = req.body;
 
@@ -78,11 +80,11 @@ const signUp = async (req, res) => {
                 </body>
             </html>
         `;
-        // add validation
         const saltPassword = await bcrypt.genSalt(10)
         const hashPass = await bcrypt.hash(password, saltPassword)
-        const user = await User.create({
-            email, password: hashPass, firstName, lastName
+        const randomString = cryptoRandomString({ length: 128, type: 'url-safe' })
+        await User.create({
+            email, password: hashPass, firstName, lastName, hash: randomString
         })
 
         sendEmail(email, "Verify Your Email", html);

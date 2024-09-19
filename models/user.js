@@ -17,7 +17,12 @@ const userSchema = new mongoose.Schema({
     },
     hash: {
         type: String
-    }
+    },
+    emailVerified: {
+        type: Boolean,
+        default: false
+    },
+    refreshToken: [String]
 }, { timestamps: true })
 
 const User = mongoose.model('User', userSchema)
