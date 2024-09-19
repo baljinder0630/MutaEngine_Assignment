@@ -1,12 +1,14 @@
 import User from "../models/user.js"
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
-import sendEmail from "../services/sendEmail.js"
 
 const signin = async (req, res) => {
     const { email, password } = req.body
     try {
         // Add email validation
+        if (!email) return res.status(404).json({ success: false, message: "Invalid email" })
+        if (!password) return res.status(404).json({ success: false, message: "Invalid password" })
+
         const user = await User.findOne({ email })
         if (!user) {
             return res.status(404).json({ success: false, message: "User not found" })
@@ -36,6 +38,10 @@ const signin = async (req, res) => {
                 email: email
             })
         }
+        return res.status(400).json({
+            success: false,
+            message: "Invalid credentials"
+        })
 
     } catch (error) {
 
