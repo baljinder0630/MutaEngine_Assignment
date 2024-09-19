@@ -22,6 +22,9 @@ const signUp = async (req, res) => {
     })
 
     try {
+
+        const url = `${process.env.CLIENT}/verifyemail`
+        // TODO:
         const html = `
             <!DOCTYPE html>
             <html lang="en">
