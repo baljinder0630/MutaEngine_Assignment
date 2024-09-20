@@ -20,22 +20,22 @@ jobs:
 
       - name: Debug Host IP
         run: |
-          echo "Host IP: ${{ secrets.HOST_IP }}"
+          echo "Host IP: ${{ secrets.VM_HOST_IP }}"
 
       - name: Add AWS VM's host key to known hosts
         run: |
           mkdir -p ~/.ssh
-          if [ -n "${{ secrets.HOST_IP }}" ]; then
-            ssh-keyscan -H ${{ secrets.HOST_IP }} >> ~/.ssh/known_hosts
+          if [ -n "${{ secrets.VM_HOST_IP }}" ]; then
+            ssh-keyscan -H ${{ secrets.VM_HOST_IP }} >> ~/.ssh/known_hosts
           else
-            echo "HOST_IP is not set!"
+            echo "VM_HOST_IP is not set!"
             exit 1
           fi
 
       - name: Copy code to AWS EC2
         uses: appleboy/scp-action@v0.1.4
         with:
-          host: ${{ secrets.HOST_IP }}
+          host: ${{ secrets.VM_HOST_IP }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: .
@@ -46,7 +46,7 @@ jobs:
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > private-key.pem
           chmod 600 private-key.pem
 
-          ssh -i private-key.pem ${{ secrets.USERNAME }}@${{ secrets.HOST_IP }} -o StrictHostKeyChecking=no << 'ENDSSH'
+          ssh -i private-key.pem ${{ secrets.USERNAME }}@${{ secrets.VM_HOST_IP }} -o StrictHostKeyChecking=no << 'ENDSSH'
             cd /home/${{ secrets.USERNAME }}/prod/backend
             touch .env
             cp /home/${{ secrets.USERNAME }}/env/prod/backend/.env /home/${{ secrets.USERNAME }}/prod/backend/.env
@@ -57,7 +57,7 @@ jobs:
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > private-key.pem
           chmod 600 private-key.pem
 
-          ssh -i private-key.pem ${{ secrets.USERNAME }}@${{ secrets.HOST_IP }} -o StrictHostKeyChecking=no << 'ENDSSH'
+          ssh -i private-key.pem ${{ secrets.USERNAME }}@${{ secrets.VM_HOST_IP }} -o StrictHostKeyChecking=no << 'ENDSSH'
             cd /home/${{ secrets.USERNAME }}/prod/backend
             sudo systemctl stop prod-backend
             docker build --no-cache -t prod-backend .
