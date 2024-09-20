@@ -25,12 +25,11 @@ jobs:
         run: |
           mkdir -p ~/.ssh
           if [ -n "${{ secrets.HOST_IP }}" ]; then
-            ssh-keyscan -H ${{ secrets.HOST_IP }} >> ~/.ssh/known_hosts || true
+            ssh-keyscan -H ${{ secrets.HOST_IP }} >> ~/.ssh/known_hosts
           else
             echo "HOST_IP is not set!"
             exit 1
           fi
-
 
       - name: Copy code to AWS EC2
         uses: appleboy/scp-action@v0.1.4
@@ -60,7 +59,7 @@ jobs:
           ssh -i private-key.pem ${{ secrets.USERNAME }}@${{ secrets.HOST_IP }} -o StrictHostKeyChecking=no << 'ENDSSH'
             cd /home/${{ secrets.USERNAME }}/prod/backend
             sudo systemctl stop prod-backend
-            docker build -t prod-backend .
+            docker build --no-cache -t prod-backend .
             docker images -a
             sudo systemctl start prod-backend
             docker ps -a
