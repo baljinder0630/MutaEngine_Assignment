@@ -1,0 +1,92 @@
+/* Google Button Hover Effect */
+.google-button:hover {
+    background-color: #357ae8;
+}
+
+/* Auth Container Styles */
+.auth-container {
+    max-width: 400px;
+    /* Increased width for larger screens */
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+}
+
+/* Center Heading */
+.auth-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    /* Space below heading */
+}
+
+/* Form Field Styles */
+.auth-container form div {
+    margin-bottom: 15px;
+}
+
+.auth-container label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.auth-container input {
+    width: 100%;
+    padding: 10px;
+    /* Increased padding for better touch */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    /* Ensure padding is included in width */
+}
+
+/* Error Message Styling */
+.auth-container .error {
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+/* Button Styles */
+.signup-button,
+.signin-button,
+.google-button {
+    width: 100%;
+    /* Ensure buttons fit within the container */
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    /* Increase font size for better readability */
+}
+
+.signup-button {
+    background-color: #28a745;
+    color: white;
+    margin-bottom: 10px;
+    /* Space between buttons */
+}
+
+.signin-button {
+    background-color: #007bff;
+    /* Different color for sign-in button */
+    color: white;
+}
+
+.google-button {
+    background-color: #4285F4;
+    color: white;
+    padding: 10px;
+    /* Adjust padding to be consistent */
+    margin-top: 10px;
+    /* Space above Google button */
+}
+
+/* Disabled Button Styles */
+.auth-container button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    /* Change cursor to indicate disabled state */
+}

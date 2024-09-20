@@ -10,10 +10,10 @@ const forgotPassword = async (req, res) => {
         if (!email) return res.status(404).json({ success: false, message: "Invalid email" })
 
         const user = await User.findOne({ email })
-        if (!user) return res.status(400).json({ success: false, message: "User not found" })
+        if (!user) return res.status(404).json({ success: false, message: "User not found" })
 
         const userId = user._id
-        const url = `${process.env.CLIENT}/resetpassword/?token=${randomString}&id=${userId}` //real link
+        const url = `${process.env.CLIENT}/reset-password/?token=${randomString}&id=${userId}` //real link
         const html = `
             <!DOCTYPE html>
             <html lang="en">

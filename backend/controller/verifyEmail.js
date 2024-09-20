@@ -17,14 +17,15 @@ const refreshTokenCookieOptions = {
 }
 
 const verifyEmail = async (req, res) => {
-    const { hash } = req.body
+    const hash = req.query.token
     // hash validation
     if (!hash) return res.status(400).json({ success: false, message: "Invalid Hash" })
     try {
+        console.log(hash)
         const user = await User.findOne({ hash })
 
         if (!user) {
-            res.status(404).json({
+            return res.status(404).json({
                 success: false,
                 message: 'User not found!',
             })

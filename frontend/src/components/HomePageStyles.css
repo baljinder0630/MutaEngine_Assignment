@@ -1,0 +1,53 @@
+/* src/components/home/HomePageStyles.css */
+
+.home-container {
+    text-align: center;
+    margin: 50px auto 20px auto;
+    /* Top margin adjusted, bottom margin added */
+    max-width: 800px;
+    /* Use max-width for responsiveness */
+    padding: 20px;
+    /* Added padding for better spacing */
+}
+
+.home-buttons {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    /* Center buttons horizontally */
+    gap: 10px;
+    /* Space between buttons */
+}
+
+.home-button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    /* Changed to Bootstrap primary color */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    /* Smooth transition effect */
+}
+
+.home-button:hover {
+    background-color: #0056b3;
+    /* Darker shade for hover effect */
+}
+
+/* Optional: Responsive adjustments for smaller screens */
+@media (max-width: 576px) {
+    .home-container {
+        width: 90%;
+        /* Make container width responsive */
+    }
+
+    .home-button {
+        font-size: 14px;
+        /* Adjust font size on smaller screens */
+        padding: 8px 16px;
+        /* Adjust padding on smaller screens */
+    }
+}

@@ -2,6 +2,7 @@ import User from "../models/user.js"
 import bcrypt from "bcrypt"
 import sendEmail from "../services/sendEmail.js"
 import cryptoRandomString from 'crypto-random-string'
+import axios from "axios"
 
 const signUp = async (req, res) => {
     const { email, password, firstName, lastName } = req.body;
@@ -22,8 +23,15 @@ const signUp = async (req, res) => {
     })
 
     try {
+        const saltPassword = await bcrypt.genSalt(10)
+        const hashPass = await bcrypt.hash(password, saltPassword)
+        const randomString = cryptoRandomString({ length: 128, type: 'url-safe' })
+        const randomString2 = cryptoRandomString({ length: 128, type: 'url-safe' })
+        await User.create({
+            email, password: hashPass, firstName, lastName, hash: randomString2
+        })
 
-        const url = `${process.env.CLIENT}/verifyemail`
+        const url = `${process.env.CLIENT}/verifyemail/?token=${randomString2}`
         // TODO:
         const html = `
             <!DOCTYPE html>
@@ -76,19 +84,14 @@ const signUp = async (req, res) => {
                         <h1>Verify Your Email Address</h1>
                         <p>Hello,</p>
                         <p>Thank you for signing up! To complete your registration, please verify your email address by clicking the button below:</p>
-                        <p><a href="your-verification-link" class="verify-button">Verify Email</a></p>
+                        <p><a href="${url}" class="verify-button">Verify Email</a></p>
                         <p>If you did not create an account, you can safely ignore this email.</p>
                         <p>Thanks,<br>Your Company Name</p>
                     </div>
                 </body>
             </html>
         `;
-        const saltPassword = await bcrypt.genSalt(10)
-        const hashPass = await bcrypt.hash(password, saltPassword)
-        const randomString = cryptoRandomString({ length: 128, type: 'url-safe' })
-        await User.create({
-            email, password: hashPass, firstName, lastName, hash: randomString
-        })
+
 
         sendEmail(email, "Verify Your Email", html);
         return res.status(200).json({
