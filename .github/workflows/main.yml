@@ -1,0 +1,59 @@
+name: Production Deployment
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    name: build
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Add AWS VM's host key to known hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -v -H ${{ secrets.HOST_IP }} >> ~/.ssh/known_hosts
+
+      - name: Copy code to AWS EC2
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.HOST_IP }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: .
+          target: /home/${{ secrets.USERNAME }}/prod/backend
+
+      - name: Copy env
+        run: |
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > private-key.pem
+          chmod 600 private-key.pem
+
+          ssh -i private-key.pem ${{ secrets.USERNAME }}@${{ secrets.HOST_IP }} -o StrictHostKeyChecking=no << 'ENDSSH'
+            cd /home/${{ secrets.USERNAME }}/prod/backend
+            touch .env
+            cp /home/${{ secrets.USERNAME }}/env/prod/backend/.env /home/${{ secrets.USERNAME }}/prod/backend/.env
+          ENDSSH
+
+      - name: Build and run Docker image on AWS VM
+        run: |
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > private-key.pem
+          chmod 600 private-key.pem
+
+          ssh -i private-key.pem ${{ secrets.USERNAME }}@${{ secrets.HOST_IP }} -o StrictHostKeyChecking=no << 'ENDSSH'
+            cd /home/${{ secrets.USERNAME }}/prod/backend
+            sudo systemctl stop prod-backend
+            docker build -t prod-backend .
+            docker images -a
+            sudo systemctl start prod-backend
+            docker ps -a
+            echo "Prod deployment complete"
+          ENDSSH
