@@ -19,7 +19,8 @@ jobs:
           node-version: 18
 
       - name: Debug Host IP
-        run: echo "Host IP: ${{ secrets.HOST_IP }}"
+        run: |
+          echo "Host IP: ${{ secrets.HOST_IP }}"
 
       - name: Add AWS VM's host key to known hosts
         run: |
