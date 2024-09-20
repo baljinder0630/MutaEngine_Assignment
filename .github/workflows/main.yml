@@ -18,10 +18,19 @@ jobs:
         with:
           node-version: 18
 
+      - name: Debug Host IP
+        run: echo "Host IP: ${{ secrets.HOST_IP }}"
+
       - name: Add AWS VM's host key to known hosts
         run: |
           mkdir -p ~/.ssh
-          ssh-keyscan -v -H ${{ secrets.HOST_IP }} >> ~/.ssh/known_hosts
+          if [ -n "${{ secrets.HOST_IP }}" ]; then
+            ssh-keyscan -H ${{ secrets.HOST_IP }} >> ~/.ssh/known_hosts || true
+          else
+            echo "HOST_IP is not set!"
+            exit 1
+          fi
+
 
       - name: Copy code to AWS EC2
         uses: appleboy/scp-action@v0.1.4
