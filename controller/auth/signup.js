@@ -1,6 +1,6 @@
 import User from "../../models/user.js"
 import bcrypt from "bcrypt"
-import sendEmail from "../../services/sendEmail.js"
+import { sendEmail } from "../../services/sendEmail.js"
 import cryptoRandomString from 'crypto-random-string'
 import axios from "axios"
 

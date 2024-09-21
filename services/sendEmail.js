@@ -1,13 +1,16 @@
 import nodemailer from "nodemailer"
+import dotenv from 'dotenv'
+dotenv.config()
+
+const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS
+    }
+});
 const sendEmail = async (toAddress, subject, html) => {
     try {
-        const transporter = nodemailer.createTransport({
-            service: "gmail",
-            auth: {
-                user: process.env.SMTP_USER,
-                pass: process.env.SMTP_PASS
-            }
-        });
         const mailOptions = {
             from: process.env.SMTP_USER,
             to: toAddress,
@@ -22,4 +25,23 @@ const sendEmail = async (toAddress, subject, html) => {
     }
 }
 
-export default sendEmail
+const sendInvoiceEmail = async (toEmail, invoicePath) => {
+
+
+    const mailOptions = {
+        from: 'your-email@gmail.com',
+        to: toEmail,
+        subject: 'Your Invoice',
+        text: 'Thank you for your payment! Please find your invoice attached.',
+        attachments: [
+            {
+                filename: 'invoice.pdf',
+                path: invoicePath,
+            },
+        ],
+    };
+
+    await transporter.sendMail(mailOptions);
+};
+
+export { sendEmail, sendInvoiceEmail }

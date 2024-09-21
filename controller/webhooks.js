@@ -2,10 +2,39 @@ import { validateWebhookSignature } from 'razorpay/dist/utils/razorpay-utils.js'
 import logger from '../utils/logger.js';
 import dotenv from 'dotenv';
 import Order from '../models/order.js';
+import generateInvoice from '../services/generatePdf.js';
+import { sendInvoiceEmail } from '../services/sendEmail.js';
 dotenv.config();
+const RAZORPAY_IPS = [
+    '52.66.75.174',
+    '52.66.76.63',
+    '52.66.151.218',
+    '35.154.217.40',
+    '35.154.22.73',
+    '35.154.143.15',
+    '13.126.199.247',
+    '13.126.238.192',
+    '13.232.194.134',
+    '127.0.0.1'
+];
+
+const isRazorpayIp = (ip) => {
+    return RAZORPAY_IPS.includes(ip)
+};
+
 
 const webhooks = async (req, res) => {
     try {
+        const clientIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+
+        // Log the client's IP address
+        console.log("Client IP Address:", clientIp);
+
+        // Validate if the request is from Razorpay IP
+        if (!isRazorpayIp(clientIp)) {
+            console.error("Unauthorized IP:", clientIp);
+            return res.status(403).json({ success: false, message: "Unauthorized IP" });
+        }
         const webhookBody = req.body;
         const webhookSignature = req.headers['x-razorpay-signature'];
 
@@ -18,7 +47,7 @@ const webhooks = async (req, res) => {
 
         if (isValidSignature) {
             const event = webhookBody;
-            console.log(event.payload.payment);
+            // console.log(event.payload.payment);
             switch (event.event) {
                 case 'payment.authorized': {
                     const orderId = event.payload.payment.entity.order_id;
@@ -62,6 +91,8 @@ const webhooks = async (req, res) => {
                     );
 
                     if (updatedOrder) {
+                        const path = await generateInvoice({ id: paymentId })
+                        sendInvoiceEmail(event.payload.payment.entity.email, path);
                         res.status(200).json({
                             success: true,
                             message: 'Payment captured and order updated successfully',
