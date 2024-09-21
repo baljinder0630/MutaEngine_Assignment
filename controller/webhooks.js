@@ -25,16 +25,16 @@ const isRazorpayIp = (ip) => {
 
 const webhooks = async (req, res) => {
     try {
-        const clientIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+        // const clientIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
 
-        // Log the client's IP address
-        console.log("Client IP Address:", clientIp);
+        // // Log the client's IP address
+        // console.log("Client IP Address: is", req.ip);
 
-        // Validate if the request is from Razorpay IP
-        if (!isRazorpayIp(clientIp)) {
-            console.error("Unauthorized IP:", clientIp);
-            return res.status(403).json({ success: false, message: "Unauthorized IP" });
-        }
+        // // Validate if the request is from Razorpay IP
+        // if (!isRazorpayIp(clientIp)) {
+        //     console.error("Unauthorized IP:", clientIp);
+        //     return res.status(403).json({ success: false, message: "Unauthorized IP" });
+        // }
         const webhookBody = req.body;
         const webhookSignature = req.headers['x-razorpay-signature'];
 
