@@ -1,5 +1,6 @@
 import User from "../../models/user.js"
 import bcrypt, { hash } from "bcrypt"
+import { isStrongPassword, isValidUserId } from "../../utils/validator.js"
 
 const resetPassword = async (req, res) => {
     const { password } = req.body
@@ -9,12 +10,10 @@ const resetPassword = async (req, res) => {
     if (!token) {
         return res.json({ success: false, message: 'Invalid data' })
     }
-    if (!password)
-        // if (!isStrongPassword(password))
+    if (!isStrongPassword(password))
         return res.json({ success: false, message: 'Require a strong password' })
 
-    if (!id)
-        // if (!isValidUserId(id))
+    if (!isValidUserId(id))
         return res.json({ success: false, message: 'Invalid userId' })
 
 

@@ -1,12 +1,13 @@
 import User from "../../models/user.js"
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
+import { isValidEmail } from "../../utils/validator.js"
 
 const signin = async (req, res) => {
     const { email, password } = req.body
     try {
         // Add email validation
-        if (!email) return res.status(404).json({ success: false, message: "Invalid email" })
+        if (!isValidEmail(email)) return res.status(404).json({ success: false, message: "Invalid email" })
         if (!password) return res.status(404).json({ success: false, message: "Invalid password" })
 
         const user = await User.findOne({ email })

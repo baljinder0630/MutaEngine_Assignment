@@ -4,7 +4,6 @@ import { sendEmail } from "../../services/sendEmail.js";
 
 const forgotPassword = async (req, res) => {
     const { email } = req.body;
-    // email validation
     const randomString = cryptoRandomString({ length: 128, type: 'url-safe' })
     try {
         if (!email) return res.status(404).json({ success: false, message: "Invalid email" })

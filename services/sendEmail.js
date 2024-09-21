@@ -29,7 +29,7 @@ const sendInvoiceEmail = async (toEmail, invoicePath) => {
 
 
     const mailOptions = {
-        from: 'your-email@gmail.com',
+        from: process.env.SMTP_USER,
         to: toEmail,
         subject: 'Your Invoice',
         text: 'Thank you for your payment! Please find your invoice attached.',

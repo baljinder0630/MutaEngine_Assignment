@@ -2,19 +2,19 @@ import User from "../../models/user.js"
 import bcrypt from "bcrypt"
 import { sendEmail } from "../../services/sendEmail.js"
 import cryptoRandomString from 'crypto-random-string'
-import axios from "axios"
+import { isStrongPassword, isValidEmail } from "../../utils/validator.js"
 
 const signUp = async (req, res) => {
     const { email, password, firstName, lastName } = req.body;
 
-    if (!email) return res.status(404).json({
+    if (!isValidEmail(email)) return res.status(404).json({
         success: false,
         message: "Email is required"
     })
 
-    if (!password) return res.status(404).json({
+    if (!isStrongPassword(password)) return res.status(404).json({
         success: false,
-        message: "Password is required"
+        message: "Strong password required"
     })
 
     if (!firstName) return res.status(404).json({
@@ -26,13 +26,11 @@ const signUp = async (req, res) => {
         const saltPassword = await bcrypt.genSalt(10)
         const hashPass = await bcrypt.hash(password, saltPassword)
         const randomString = cryptoRandomString({ length: 128, type: 'url-safe' })
-        const randomString2 = cryptoRandomString({ length: 128, type: 'url-safe' })
         await User.create({
-            email, password: hashPass, firstName, lastName, hash: randomString2
+            email, password: hashPass, firstName, lastName, hash: randomString
         })
 
-        const url = `${process.env.CLIENT}/verifyemail/?token=${randomString2}`
-        // TODO:
+        const url = `${process.env.CLIENT}/verifyemail/?token=${randomString}`
         const html = `
             <!DOCTYPE html>
             <html lang="en">

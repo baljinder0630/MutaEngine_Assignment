@@ -12,7 +12,7 @@ const RAZORPAY_IPS = [
     '13.126.199.247',
     '13.126.238.192',
     '13.232.194.134',
-    '127.0.0.1' // Localhost for testing
+    //'127.0.0.1' // Localhost for testing
 ];
 
 const isRazorpayIp = (ip) => {
