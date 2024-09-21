@@ -1,5 +1,5 @@
 import axios from "axios";
-import User from "../models/user.js";
+import User from "../../models/user.js";
 import jwt from "jsonwebtoken"
 
 const accessTokenCookieOptions = {

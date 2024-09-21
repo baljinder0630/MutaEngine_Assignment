@@ -1,4 +1,4 @@
-import User from "../models/user.js"
+import User from "../../models/user.js"
 import bcrypt, { hash } from "bcrypt"
 
 const resetPassword = async (req, res) => {

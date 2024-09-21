@@ -1,10 +1,10 @@
 import express from "express"
-import signUp from "../controller/signup.js"
-import signin from "../controller/signin.js"
-import verifyEmail from "../controller/verifyEmail.js"
-import sendForgotPass from "../controller/sendForgotPassword.js"
-import resetPassword from "../controller/resetPassword.js"
-import { googleAuth, googleAuthCallback } from "../controller/googleAuth.js"
+import signUp from "../controller/auth/signup.js"
+import signin from "../controller/auth/signin.js"
+import verifyEmail from "../controller/auth/verifyEmail.js"
+import sendForgotPass from "../controller/auth/sendForgotPassword.js"
+import resetPassword from "../controller/auth/resetPassword.js"
+import { googleAuth, googleAuthCallback } from "../controller/auth/googleAuth.js"
 import recaptchaVerification from "../middleware/recaptchaVerification.js"
 const router = express.Router()
 
