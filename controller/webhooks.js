@@ -18,7 +18,7 @@ const webhooks = async (req, res) => {
 
         if (isValidSignature) {
             const event = webhookBody;
-
+            console.log(event.payload.payment);
             switch (event.event) {
                 case 'payment.authorized': {
                     const orderId = event.payload.payment.entity.order_id;
