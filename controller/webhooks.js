@@ -52,7 +52,7 @@ const webhooks = async (req, res) => {
                     const orderId = event.payload.payment.entity.order_id;
                     const paymentId = event.payload.payment.entity.id;
 
-                    const updatedOrder = await MedicineOrder.updateOne(
+                    const updatedOrder = await Order.updateOne(
                         {
                             paymentGatewayOrderId: orderId,
                             paymentGatewayPaymentId: paymentId,
@@ -79,7 +79,7 @@ const webhooks = async (req, res) => {
                 case 'payment.failed': {
                     const orderId = event.payload.payment.entity.order_id;
 
-                    const order = await MedicineOrder.findOneAndUpdate(
+                    const order = await Order.findOneAndUpdate(
                         { paymentGatewayOrderId: orderId },
                         {
                             status: 'cancelled',
@@ -108,7 +108,7 @@ const webhooks = async (req, res) => {
                     const orderId = event.payload.payment.entity.order_id;
                     const paymentId = event.payload.payment.entity.id;
 
-                    const updatedOrder = await MedicineOrder.updateOne(
+                    const updatedOrder = await Order.updateOne(
                         {
                             paymentGatewayOrderId: orderId,
                             paymentGatewayPaymentId: paymentId,
@@ -142,7 +142,7 @@ const webhooks = async (req, res) => {
                     const paymentId = event.payload.payment.entity.id;
                     const refundId = event.payload.refund.entity.id;
 
-                    const order = await MedicineOrder.findOneAndUpdate(
+                    const order = await Order.findOneAndUpdate(
                         {
                             paymentGatewayOrderId: orderId,
                             paymentGatewayPaymentId: paymentId,
@@ -177,7 +177,7 @@ const webhooks = async (req, res) => {
                     const paymentId = event.payload.payment.entity.id;
                     const orderId = event.payload.payment.entity.order_id;
 
-                    const order = await MedicineOrder.findOneAndUpdate(
+                    const order = await Order.findOneAndUpdate(
                         {
                             paymentGatewayOrderId: orderId,
                             paymentGatewayPaymentId: paymentId,
