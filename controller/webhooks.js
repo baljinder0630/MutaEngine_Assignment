@@ -15,26 +15,31 @@ const RAZORPAY_IPS = [
     '13.126.199.247',
     '13.126.238.192',
     '13.232.194.134',
-    '127.0.0.1'
+    // '127.0.0.1' // Localhost for testing
 ];
 
 const isRazorpayIp = (ip) => {
-    return RAZORPAY_IPS.includes(ip)
-};
+    const whitelist = RAZORPAY_IPS.map(item => item.trim().toLowerCase());
 
+    // Normalize the IP by removing the IPv6-mapped prefix if it exists
+    const normalizedIp = ip.trim().toLowerCase().replace(/^::ffff:/, '');
+
+    // Check if the normalized IP is in the whitelist
+    return whitelist.includes(normalizedIp);
+};
 
 const webhooks = async (req, res) => {
     try {
-        // const clientIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+        console.log("Client IP Address: is", req.ip);
+        const clientIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
 
         // // Log the client's IP address
-        // console.log("Client IP Address: is", req.ip);
 
-        // // Validate if the request is from Razorpay IP
-        // if (!isRazorpayIp(clientIp)) {
-        //     console.error("Unauthorized IP:", clientIp);
-        //     return res.status(403).json({ success: false, message: "Unauthorized IP" });
-        // }
+        // Validate if the request is from Razorpay IP
+        if (!isRazorpayIp(clientIp)) {
+            console.error("Unauthorized IP:", clientIp);
+            return res.status(403).json({ success: false, message: "Unauthorized IP" });
+        }
         const webhookBody = req.body;
         const webhookSignature = req.headers['x-razorpay-signature'];
 
